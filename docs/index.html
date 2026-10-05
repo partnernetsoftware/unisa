@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UNISA — PartnerNet Software</title>
+<meta name="description" content="UNISA by PartnerNet Software: unisacc, a neural-network-based C99 compiler whose networks are constructed from TSV tables, not trained.">
+<style>
+:root{--bg:#fbfaf7;--fg:#1d1d1f;--muted:#5d5d63;--line:#e4e1da;--card:#ffffff;--accent:#2f5d50;--accent-fg:#ffffff;--code:#f1efe9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121413;--fg:#ecebe7;--muted:#a3a39d;--line:#2a2d2b;--card:#1a1d1b;--accent:#7fb8a5;--accent-fg:#0d1210;--code:#202422}}
+:root[data-theme="dark"]{--bg:#121413;--fg:#ecebe7;--muted:#a3a39d;--line:#2a2d2b;--card:#1a1d1b;--accent:#7fb8a5;--accent-fg:#0d1210;--code:#202422}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{font-weight:700;letter-spacing:.12em}
+nav a{margin-left:18px;text-decoration:none;color:var(--muted);font-size:14px}
+.hero{padding:72px 0 48px}
+.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0 0 16px;letter-spacing:-.01em}
+.hero p{font-size:18px;color:var(--muted);max-width:680px;margin:0 0 28px}
+.btn{display:inline-block;padding:10px 18px;border-radius:8px;background:var(--accent);color:var(--accent-fg);text-decoration:none;font-weight:600;margin:0 10px 10px 0}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+section{padding:40px 0;border-top:1px solid var(--line)}
+h2{font-size:24px;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:middle}
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px;overflow-x:auto;font-size:14px}
+ol.flow{padding-left:20px;margin:0}
+ol.flow li{margin:6px 0}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><span class="brand">UNISA</span><nav><a href="#unisacc">unisacc</a><a href="#how">How it works</a><a href="#download">Download</a><a href="#roadmap">Roadmap</a></nav></div></header>
+<main class="wrap">
+<div class="hero">
+<h1>A neural-network-based C99 compiler, built from tables.</h1>
+<p><b>unisacc</b> compiles C99 for Linux, macOS and Windows on x86-64 and arm64, writes the executables itself, and rebuilds itself byte for byte. Its compilation stages run on integer networks that are <b>constructed</b> from TSV tables and checked exhaustively, not trained.</p>
+<a class="btn" href="#download">Download unisacc</a><a class="btn ghost" href="https://github.com/partnernetsoftware/unisacc">Source on GitHub</a>
+</div>
+
+<section id="unisacc">
+<h2>unisacc</h2>
+<div class="grid">
+<div class="card"><h3>One file, six targets</h3><p><code>unisacc.com</code> runs on {Linux, macOS, Windows} × {x86-64, arm64} and writes ELF, Mach-O and PE executables directly, with no external assembler or linker.</p></div>
+<div class="card"><h3>Self-hosting</h3><p>The released compiler rebuilds itself; each release checks that the rebuilt file is byte-identical (a fixed point).</p></div>
+<div class="card"><h3>C99 as written</h3><p>Real projects such as jsmn, cJSON, miniz, stb, Lua and the c-testsuite corpus compile and run. Coverage is measured clause by clause against the standard.</p></div>
+<div class="card"><h3>Host libraries</h3><p>On Linux and macOS, functions a program declares but does not define, such as <code>getaddrinfo</code> or libcurl, are forwarded to the system library.</p></div>
+</div>
+</section>
+
+<section id="how">
+<h2>How it works</h2>
+<p>Every table-shaped decision in the compiler (character classes, preprocessor directives, precedence, types, instruction selection, calling conventions) is answered by a small integer threshold network. The weights are derived deterministically from a TSV table DSL that describes finite state transitions.</p>
+<ol class="flow">
+<li><b>Tables.</b> Each stage is written as TSV facts and manifests.</li>
+<li><b>Construction.</b> A constructor turns the tables into networks. No gradient descent, no training data.</li>
+<li><b>Exhaustive check.</b> Every network is verified over its whole input domain before it ships.</li>
+<li><b>Execution.</b> A generic executor runs the networks stage by stage; a classic reference compiler is kept as a byte-for-byte referee.</li>
+</ol>
+<p>Each release is signed for Windows (Authenticode) and notarized for macOS, and smoke-tested on six native machines after publishing.</p>
+</section>
+
+<section id="download">
+<h2>Download</h2>
+<div class="grid">
+<div class="card"><h3>unisacc 0.0.27 <span class="tag">latest</span></h3><p><code>unisacc.com</code> (one file for Linux, macOS and Windows) and a notarized macOS dmg.<br><a href="https://github.com/partnernetsoftware/unisa/releases/tag/unisacc-v0.0.27">Get the release</a> · <a href="https://github.com/partnernetsoftware/unisacc/releases">all releases</a></p></div>
+<div class="card"><h3>ujs <span class="tag">soon</span></h3><p>Release packages will be published here.</p></div>
+</div>
+<pre>chmod +x unisacc.com
+./unisacc.com hello.c          # compile and run
+./unisacc.com -o hello hello.c # write an executable</pre>
+</section>
+
+<section id="roadmap">
+<h2>Roadmap</h2>
+<div class="grid">
+<div class="card"><h3>Building without Python</h3><p>The table constructors are being ported to C so the whole build chain runs on the previous release alone.</p></div>
+<div class="card"><h3>Package index</h3><p>This site will host the package index that unisacc's package manager reads.</p></div>
+<div class="card"><h3>agenterm plugins and apps</h3><p>An index of plugins and applications for agenterm.</p></div>
+<div class="card"><h3>Papers</h3><p>Write-ups of the construction method will be published here.</p></div>
+</div>
+</section>
+</main>
+<footer><div class="wrap">© 2026 PartnerNet Software · <a href="https://github.com/partnernetsoftware/unisa">github.com/partnernetsoftware/unisa</a></div></footer>
+</body>
+</html>
